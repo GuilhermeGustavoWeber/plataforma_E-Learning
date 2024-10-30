@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Cursos</title>
+</head>
+<body>
+    <h1>Catálogo de Cursos</h1>
+    <ul>
+        {% for curso in cursos %}
+            <li>
+                <h2>{{ curso.nome }}</h2>
+                <p>{{ curso.descricao }}</p>
+                <p>Duração: {{ curso.duracao }} horas</p>
+                <p>Instrutor: {{ curso.instrutor }}</p>
+                <form action="{{ url_for('inscrever_curso', curso_id=curso.id) }}" method="POST">
+                    <button type="submit">Inscrever-se</button>
+                </form>
+                <a href="{{ url_for('detalhes_curso', curso_id=curso.id) }}">Ver detalhes</a>
+            </li>
+        {% else %}
+            <p>Nenhum curso disponível no momento.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

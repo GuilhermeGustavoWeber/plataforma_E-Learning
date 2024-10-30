@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste do Curso</title>
+</head>
+<body>
+    <h1>Teste do Curso</h1>
+    <form method="POST">
+        {% for pergunta in perguntas %}
+            <p>{{ pergunta.pergunta }}</p>
+            <input type="text" name="resposta_{{ pergunta.id }}" required>
+        {% endfor %}
+        <button type="submit">Enviar Respostas</button>
+    </form>
+</body>
+</html>

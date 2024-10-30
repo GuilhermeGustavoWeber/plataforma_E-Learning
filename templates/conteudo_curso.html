@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Conteúdo do Curso - {{ curso.nome }}</title>
+</head>
+<body>
+    <h1>{{ curso.nome }}</h1>
+    <p>{{ curso.descricao }}</p>
+    <h2>Conteúdo</h2>
+    <p>{{ curso.conteudo }}</p>  <!-- Aqui você pode incluir vídeos, PDFs, etc. -->
+    <a href="{{ url_for('progresso_curso', curso_id=curso.id) }}">Ver Progresso</a>
+</body>
+</html>
