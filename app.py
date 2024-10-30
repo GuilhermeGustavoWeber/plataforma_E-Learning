@@ -26,23 +26,24 @@ class Usuario(UserMixin, db.Model):
     senha = db.Column(db.String(100))
     cursos_inscritos = db.relationship('Inscricao', backref='usuario')
 
-
 class Curso(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(50))
-    descricao = db.Column(db.String(100))
-    duracao = db.Column(db.Integer)  # Duração em horas
-    instrutor = db.Column(db.String(50))
-    conteudo = db.Column(db.Text)  # Conteúdo do curso
-    inscricoes = db.relationship('Inscricao', backref='curso')
+    nome = db.Column(db.String(100), nullable=False)
+    descricao = db.Column(db.Text, nullable=False)
+    duracao = db.Column(db.Integer, nullable=False)  # em horas
+    instrutor = db.Column(db.String(100), nullable=False)
+    aulas = db.relationship('Aula', backref='curso', lazy=True)
 
+class Aula(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    curso_id = db.Column(db.Integer, db.ForeignKey('curso.id'), nullable=False)
 
 class Inscricao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.id'))
     progresso = db.Column(db.Float, default=0.0)
-
 
 class Avaliacao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -79,10 +80,35 @@ def inscrever_curso(curso_id):
     return redirect(url_for('lista_cursos'))
 
 
+@app.route('/curso/conteudo/<int:curso_id>')
+@login_required
+def conteudo_curso(curso_id):
+    inscricao = Inscricao.query.filter_by(usuario_id=current_user.id, curso_id=curso_id).first()
+    curso = Curso.query.get_or_404(curso_id)
+
+    # Verifique se o usuário está inscrito
+    if not inscricao:
+        flash("Você precisa se inscrever no curso para acessar o conteúdo.")
+        return redirect(url_for('detalhes_curso', curso_id=curso_id))
+
+    return render_template("conteudo_curso.html", curso=curso, inscrito=True)
+
+
+@app.route('/video_aula/<int:aula_id>')
+@login_required
+def video_aula(aula_id):
+    aula = Aula.query.get_or_404(aula_id)
+    return render_template("video_aula.html", aula_id=aula.id)
+
+
+
 @app.route('/curso/<int:curso_id>')
+@login_required
 def detalhes_curso(curso_id):
     curso = Curso.query.get_or_404(curso_id)
-    return render_template("detalhes_curso.html", curso=curso)
+    inscricao = Inscricao.query.filter_by(usuario_id=current_user.id, curso_id=curso.id).first()
+    aulas = Aula.query.filter_by(curso_id=curso.id).all()  # Obter todas as aulas do curso
+    return render_template("detalhes_curso.html", curso=curso, inscricao=inscricao, aulas=aulas)
 
 
 @app.route('/progresso/<int:curso_id>', methods=["POST"])
@@ -183,6 +209,7 @@ def logout():
     logout_user()
     flash("Logout realizado com sucesso!")
     return redirect(url_for('index'))
+
 
 @app.context_processor
 def inject_year():
