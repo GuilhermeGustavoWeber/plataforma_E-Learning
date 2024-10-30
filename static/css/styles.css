@@ -1,0 +1,29 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+footer {
+    background-color: #f8f9fa;
+    position: relative;
+    width: 100%;
+    padding: 10px 0;
+    margin-top: auto; /* Garante que o footer fique na parte inferior da página */
+}
+
+h1 {
+    color: #007bff; /* Azul do Bootstrap */
+}
+
+h2 {
+    color: #6c757d; /* Cinza do Bootstrap */
+}
+
+.navbar {
+    margin-bottom: 20px; /* Espaço abaixo da navbar */
+}
+
+.container {
+    flex: 1; /* Faz o container ocupar o espaço disponível */
+}

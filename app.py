@@ -3,6 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, current_user, login
 from flask_sqlalchemy import SQLAlchemy
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -182,6 +183,10 @@ def logout():
     logout_user()
     flash("Logout realizado com sucesso!")
     return redirect(url_for('index'))
+
+@app.context_processor
+def inject_year():
+    return {'year': datetime.now().year}
 
 
 if __name__ == "__main__":

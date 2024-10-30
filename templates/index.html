@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma E-Learning</title>
-</head>
-<body>
-    <h1>Bem-vindo à Plataforma de E-Learning</h1>
-    <a href="{{ url_for('lista_cursos') }}">Ver Cursos</a>
-    <br>
-    {% if current_user.is_authenticated %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-    {% else %}
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('registrar') }}">Registrar-se</a>
-    {% endif %}
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Plataforma E-Learning{% endblock %}
+
+{% block content %}
+<h1>Bem-vindo à Plataforma de E-Learning</h1>
+<a href="{{ url_for('lista_cursos') }}" class="btn btn-primary">Ver Cursos</a>
+<br><br>
+{% if current_user.is_authenticated %}
+    <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+{% else %}
+    <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+    <a href="{{ url_for('registrar') }}" class="btn btn-secondary">Registrar-se</a>
+{% endif %}
+{% endblock %}

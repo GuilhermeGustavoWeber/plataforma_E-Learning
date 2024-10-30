@@ -1,21 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-    <form method="POST">
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h1>Login</h1>
+<form method="POST">
+    <div class="form-group">
         <label>Email:</label>
-        <input type="email" name="email" required>
-        <br>
+        <input type="email" class="form-control" name="email" required>
+    </div>
+    <div class="form-group">
         <label>Senha:</label>
-        <input type="password" name="senha" required>
-        <br>
-        <input type="submit" value="Login">
-    </form>
-    <a href="{{ url_for('index') }}">Voltar</a>
-</body>
-</html>
+        <input type="password" class="form-control" name="senha" required>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Login">
+</form>
+<a href="{{ url_for('index') }}">Voltar</a>
+{% endblock %}

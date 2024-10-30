@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cursos Disponíveis</title>
-</head>
-<body>
-    <h1>Cursos</h1>
-    <ul>
-        {% for curso in cursos %}
-            <li>
-                <a href="{{ url_for('detalhes_curso', curso_id=curso.id) }}">{{ curso.nome }}</a>
-                - {{ curso.descricao }}
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Cursos{% endblock %}
+
+{% block content %}
+<h1>Cursos Disponíveis</h1>
+<ul class="list-group">
+    {% for curso in cursos %}
+    <li class="list-group-item">
+        <a href="{{ url_for('detalhes_curso', curso_id=curso.id) }}">{{ curso.nome }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
