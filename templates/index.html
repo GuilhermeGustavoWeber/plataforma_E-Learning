@@ -2,10 +2,18 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Bem-vindo ao E-Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma E-Learning</title>
 </head>
 <body>
-    <h1>Bem-vindo à Plataforma E-Learning</h1>
-    <a href="{{ url_for('catalogo_cursos') }}">Catálogo de Cursos</a>
+    <h1>Bem-vindo à Plataforma de E-Learning</h1>
+    <a href="{{ url_for('lista_cursos') }}">Ver Cursos</a>
+    <br>
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('registrar') }}">Registrar-se</a>
+    {% endif %}
 </body>
 </html>

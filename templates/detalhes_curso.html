@@ -10,17 +10,29 @@
     <p>{{ curso.descricao }}</p>
     <p>Duração: {{ curso.duracao }} horas</p>
     <p>Instrutor: {{ curso.instrutor }}</p>
-    <p>Conteúdo: {{ curso.conteudo }}</p>
+    <h2>Conteúdo do Curso</h2>
+    <p>{{ curso.conteudo }}</p>
 
     {% if current_user.is_authenticated %}
-    <h2>Avaliar Curso</h2>
-    <form action="{{ url_for('avaliar_curso', curso_id=curso.id) }}" method="POST">
-        <label for="nota">Nota:</label>
-        <input type="number" name="nota" min="0" max="10" required>
-        <label for="comentario">Comentário:</label>
-        <textarea name="comentario" required></textarea>
-        <button type="submit">Enviar Avaliação</button>
-    </form>
+        <form action="{{ url_for('inscrever_curso', curso_id=curso.id) }}" method="POST">
+            <input type="submit" value="Inscrever-se">
+        </form>
+    {% else %}
+        <p><a href="{{ url_for('registrar') }}">Crie uma conta para se inscrever neste curso.</a></p>
     {% endif %}
+
+    <h2>Progresso</h2>
+    <form method="POST" action="{{ url_for('atualizar_progresso', curso_id=curso.id) }}">
+        <label>Progresso:</label>
+        <input type="number" name="progresso" min="0" max="100" step="1" required>
+        <input type="submit" value="Atualizar Progresso">
+    </form>
+
+    <h2>Feedback</h2>
+    <form method="POST" action="{{ url_for('feedback_curso', curso_id=curso.id) }}">
+        <label>Comentário:</label>
+        <textarea name="comentario" required></textarea>
+        <input type="submit" value="Enviar Feedback">
+    </form>
 </body>
 </html>
