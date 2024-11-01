@@ -21,6 +21,12 @@
             {% endfor %}
         </ul>
 
+        <!-- Exibir botão para download do certificado se o progresso for 100% -->
+        {% if inscricao.progresso >= 100 %}
+            <a href="{{ url_for('gerar_certificado', curso_id=curso.id) }}" class="btn btn-success">
+                Baixar Certificado
+            </a>
+        {% endif %}
 
     {% else %}
         <p>Você não está inscrito neste curso.</p>

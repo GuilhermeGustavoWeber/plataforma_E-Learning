@@ -6,6 +6,7 @@ from reportlab.pdfgen import canvas
 from datetime import datetime
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy import PickleType
+from io import BytesIO
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -214,14 +215,18 @@ def gerar_certificado(curso_id):
     inscricao = Inscricao.query.filter_by(usuario_id=current_user.id, curso_id=curso_id).first()
 
     if inscricao and inscricao.progresso >= 100:
-        caminho_certificado = f"certificados/certificado_{current_user.id}_{curso_id}.pdf"
-        c = canvas.Canvas(caminho_certificado, pagesize=letter)
+        # Cria um objeto BytesIO para o PDF
+        buffer = BytesIO()
+        c = canvas.Canvas(buffer, pagesize=letter)
         c.drawString(100, 750, "Certificado de Conclusão")
         c.drawString(100, 725, f"Este certificado é concedido a {current_user.nome}")
         c.drawString(100, 700, f"Concluiu o curso: {Curso.query.get(curso_id).nome}")
         c.save()
+        buffer.seek(0)  # Move o ponteiro para o início do buffer
 
-        return send_file(caminho_certificado, as_attachment=True)
+        # Define o nome do arquivo para download
+        filename = f"certificado_{current_user.id}_{curso_id}.pdf"
+        return send_file(buffer, as_attachment=True, download_name=filename, mimetype='application/pdf')
 
     flash("Você deve completar o curso antes de obter o certificado.")
     return redirect(url_for('detalhes_curso', curso_id=curso_id))
