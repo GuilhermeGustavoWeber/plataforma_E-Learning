@@ -101,7 +101,6 @@ def video_aula(aula_id):
     return render_template("video_aula.html", aula_id=aula.id)
 
 
-
 @app.route('/curso/<int:curso_id>')
 @login_required
 def detalhes_curso(curso_id):
