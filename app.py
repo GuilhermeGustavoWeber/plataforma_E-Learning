@@ -57,12 +57,13 @@ class AulaCompleta(db.Model):
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.id'))
 
 
-class Avaliacao(db.Model):
+class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.id'))
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'))
-    nota = db.Column(db.Float)
-    comentario = db.Column(db.Text)
+    comentario = db.Column(db.Text, nullable=False)
+
+    usuario = db.relationship('Usuario', backref='feedbacks')  # Relacionamento com o usuário
 
 
 @login_manager.user_loader
@@ -128,7 +129,10 @@ def detalhes_curso(curso_id):
     curso = Curso.query.get_or_404(curso_id)
     inscricao = Inscricao.query.filter_by(usuario_id=current_user.id, curso_id=curso.id).first()
     aulas = Aula.query.filter_by(curso_id=curso.id).all()  # Obter todas as aulas do curso
-    return render_template("detalhes_curso.html", curso=curso, inscricao=inscricao, aulas=aulas)
+    feedbacks = Feedback.query.filter_by(curso_id=curso.id).all()  # Obter feedbacks do curso
+
+    return render_template("detalhes_curso.html", curso=curso, inscricao=inscricao, aulas=aulas, feedbacks=feedbacks)
+
 
 
 @app.route('/completar_aula/<int:aula_id>', methods=['POST'])
@@ -236,11 +240,12 @@ def gerar_certificado(curso_id):
 @login_required
 def feedback_curso(curso_id):
     comentario = request.form.get("comentario")
-    avaliacao = Avaliacao(curso_id=curso_id, usuario_id=current_user.id, comentario=comentario)
-    db.session.add(avaliacao)
+    feedback = Feedback(curso_id=curso_id, usuario_id=current_user.id, comentario=comentario)
+    db.session.add(feedback)
     db.session.commit()
     flash("Feedback enviado com sucesso!")
     return redirect(url_for('detalhes_curso', curso_id=curso_id))
+
 
 
 # Rotas para login e registro de usuário

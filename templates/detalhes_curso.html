@@ -43,5 +43,18 @@
         </div>
         <button type="submit" class="btn btn-success">Enviar Feedback</button>
     </form>
+
+    <h3>Feedbacks Enviados</h3>
+    {% if feedbacks %}
+        <ul class="list-group mt-3">
+            {% for feedback in feedbacks %}
+                <li class="list-group-item">
+                    <strong>{{ feedback.usuario.nome }}</strong>: {{ feedback.comentario }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Não há feedbacks ainda.</p>
+    {% endif %}
 </div>
 {% endblock %}
