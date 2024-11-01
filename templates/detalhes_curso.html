@@ -20,6 +20,8 @@
                 <li><a href="{{ url_for('video_aula', aula_id=aula.id) }}">{{ aula.nome }}</a></li>
             {% endfor %}
         </ul>
+
+
     {% else %}
         <p>Você não está inscrito neste curso.</p>
         <form action="{{ url_for('inscrever_curso', curso_id=curso.id) }}" method="POST">
