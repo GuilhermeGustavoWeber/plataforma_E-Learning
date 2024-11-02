@@ -1,0 +1,29 @@
+<!-- gabarito.html -->
+{% extends "base.html" %}
+
+{% block title %}Gabarito: {{ teste.nome }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Gabarito: {{ teste.nome }}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Pergunta</th>
+                <th>Sua Resposta</th>
+                <th>Resposta Correta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pergunta_id, info in gabarito.items() %}
+                <tr>
+                    <td>{{ info.texto }}</td>
+                    <td>{{ info.resposta_user if info.resposta_user else 'Nenhuma resposta' }}</td>
+                    <td>{{ info.resposta_correta }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('detalhes_curso', curso_id=teste.curso_id) }}" class="btn btn-primary">Voltar ao Curso</a>
+</div>
+{% endblock %}

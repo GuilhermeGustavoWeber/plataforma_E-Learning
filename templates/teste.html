@@ -1,0 +1,23 @@
+<!-- teste.html -->
+{% extends "base.html" %}
+
+{% block title %}Teste: {{ teste.nome }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{{ teste.nome }}</h1>
+    <form method="POST">
+        {% for pergunta in perguntas %}
+            <div class="form-group">
+                <label>{{ pergunta.texto }}</label>
+                {% for alternativa in pergunta.alternativas %}
+                    <div>
+                        <input type="radio" name="resposta_{{ pergunta.id }}" value="{{ alternativa }}"> {{ alternativa }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Enviar Teste</button>
+    </form>
+</div>
+{% endblock %}

@@ -20,7 +20,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
 # Modelos do banco de dados
 class Usuario(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,6 +41,18 @@ class Aula(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.id'), nullable=False)
 
+class Avaliacao(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    curso_id = db.Column(db.Integer, db.ForeignKey('curso.id'))
+    nome = db.Column(db.String(100), nullable=False)
+    perguntas = db.relationship('Pergunta', backref='avaliacao', lazy=True)
+
+class Pergunta(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    avaliacao_id = db.Column(db.Integer, db.ForeignKey('avaliacao.id'))
+    texto = db.Column(db.String(200), nullable=False)
+    alternativas = db.Column(MutableList.as_mutable(PickleType), default=[])  # Lista de alternativas
+    resposta_correta = db.Column(db.String(100), nullable=False)  # Alternativa correta
 
 class Inscricao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,12 +61,10 @@ class Inscricao(db.Model):
     progresso = db.Column(db.Float, default=0)
     aulas_completadas = db.Column(MutableList.as_mutable(PickleType), default=[])  # Armazena os IDs das aulas como uma lista
 
-
 class AulaCompleta(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     inscricao_id = db.Column(db.Integer, db.ForeignKey('inscricao.id'))
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.id'))
-
 
 class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,7 +73,6 @@ class Feedback(db.Model):
     comentario = db.Column(db.Text, nullable=False)
 
     usuario = db.relationship('Usuario', backref='feedbacks')  # Relacionamento com o usuário
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -130,9 +138,9 @@ def detalhes_curso(curso_id):
     inscricao = Inscricao.query.filter_by(usuario_id=current_user.id, curso_id=curso.id).first()
     aulas = Aula.query.filter_by(curso_id=curso.id).all()  # Obter todas as aulas do curso
     feedbacks = Feedback.query.filter_by(curso_id=curso.id).all()  # Obter feedbacks do curso
+    avaliacoes = Avaliacao.query.filter_by(curso_id=curso.id).all()  # Obter avaliações do curso
 
-    return render_template("detalhes_curso.html", curso=curso, inscricao=inscricao, aulas=aulas, feedbacks=feedbacks)
-
+    return render_template("detalhes_curso.html", curso=curso, inscricao=inscricao, aulas=aulas, feedbacks=feedbacks, avaliacoes=avaliacoes)
 
 
 @app.route('/completar_aula/<int:aula_id>', methods=['POST'])
@@ -236,7 +244,7 @@ def gerar_certificado(curso_id):
     return redirect(url_for('detalhes_curso', curso_id=curso_id))
 
 
-@app.route('/feedback/<int:curso_id>', methods=["POST"])
+@app.route('/feedback/<int:curso_id>', methods=['POST'])
 @login_required
 def feedback_curso(curso_id):
     comentario = request.form.get("comentario")
@@ -295,8 +303,33 @@ def logout():
 def inject_year():
     return {'year': datetime.now().year}
 
+@app.route('/avaliacao/<int:curso_id>/<int:avaliacao_id>', methods=['GET', 'POST'])
+@login_required
+def avaliacao(curso_id, avaliacao_id):
+    teste = Avaliacao.query.get(avaliacao_id)
+    if not teste:
+        flash("Avaliação não encontrada", "error")
+        return redirect(url_for('index'))
 
-if __name__ == "__main__":
+    perguntas = Pergunta.query.filter_by(avaliacao_id=avaliacao_id).all()
+
+    if request.method == 'POST':
+        respostas = {key: request.form[key] for key in request.form if key.startswith('resposta_')}
+
+        # Calcular gabarito
+        gabarito = {}
+        for pergunta in perguntas:
+            gabarito[pergunta.id] = {
+                'texto': pergunta.texto,
+                'resposta_correta': pergunta.resposta_correta,
+                'resposta_user': respostas.get(f'resposta_{pergunta.id}')
+            }
+
+        return render_template("gabarito.html", gabarito=gabarito, teste=teste)
+
+    return render_template("teste.html", teste=teste, perguntas=perguntas)
+
+if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
-        app.run(debug=True)
+        db.create_all()  # Cria todas as tabelas do banco de dados
+    app.run(debug=True)

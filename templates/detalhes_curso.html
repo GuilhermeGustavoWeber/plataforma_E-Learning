@@ -16,7 +16,7 @@
 
         <h3>Aulas</h3>
         <ul>
-            {% for aula in curso.aulas %}  {# Acesso à lista de aulas do curso #}
+            {% for aula in curso.aulas %}
                 <li><a href="{{ url_for('video_aula', aula_id=aula.id) }}">{{ aula.nome }}</a></li>
             {% endfor %}
         </ul>
@@ -28,6 +28,16 @@
             </a>
         {% endif %}
 
+        <!-- Se houver uma avaliação disponível, exibir um link para a avaliação -->
+        {% if avaliacoes %}
+            <h3>Avaliação do Curso</h3>
+            <p>Você pode fazer a avaliação do curso para verificar seu aprendizado.</p>
+            <a href="{{ url_for('avaliacao', curso_id=curso.id, avaliacao_id=avaliacoes[0].id) }}" class="btn btn-info">Fazer Avaliação</a>
+        {% else %}
+            <p>Não há avaliações disponíveis para este curso.</p>
+        {% endif %}
+
+
     {% else %}
         <p>Você não está inscrito neste curso.</p>
         <form action="{{ url_for('inscrever_curso', curso_id=curso.id) }}" method="POST">
@@ -36,6 +46,7 @@
     {% endif %}
 
     <h2>Feedback</h2>
+{% if inscricao %}
     <form action="{{ url_for('feedback_curso', curso_id=curso.id) }}" method="post">
         <div class="form-group">
             <label for="comentario">Comentários:</label>
@@ -43,6 +54,10 @@
         </div>
         <button type="submit" class="btn btn-success">Enviar Feedback</button>
     </form>
+{% else %}
+    <p>Você precisa estar inscrito neste curso para enviar feedback.</p>
+{% endif %}
+
 
     <h3>Feedbacks Enviados</h3>
     {% if feedbacks %}
