@@ -3,12 +3,27 @@
 {% block title %}Cursos{% endblock %}
 
 {% block content %}
-<h1>Cursos Disponíveis</h1>
-<ul class="list-group">
-    {% for curso in cursos %}
-    <li class="list-group-item">
-        <a href="{{ url_for('detalhes_curso', curso_id=curso.id) }}">{{ curso.nome }}</a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #000;">Cursos Disponíveis</h1>
+    <ul class="list-group">
+        {% for curso in cursos %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{{ url_for('detalhes_curso', curso_id=curso.id) }}" class="text-decoration-none" style="color: #000;">{{ curso.nome }}</a>
+            <span class="badge bg-light text-dark rounded-pill">{{ curso.duracao }} horas</span> <!-- Exibir duração do curso -->
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<style>
+    .list-group-item {
+        transition: background-color 0.3s ease;
+    }
+    .list-group-item:hover {
+        background-color: #f0f8ff; /* Cor de fundo ao passar o mouse */
+    }
+    .badge {
+        font-size: 0.9em; /* Tamanho da fonte do badge */
+    }
+</style>
 {% endblock %}

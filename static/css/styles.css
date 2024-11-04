@@ -13,11 +13,27 @@ footer {
 }
 
 h1 {
-    color: #007bff; /* Azul do Bootstrap */
+    color: #000; /* Preto para o título principal */
 }
 
 h2 {
-    color: #6c757d; /* Cinza do Bootstrap */
+    color: #333; /* Um cinza escuro para títulos secundários */
+}
+
+h3 {
+    color: #6c757d; /* Um cinza padrão do Bootstrap para subtítulos */
+}
+
+h4 {
+    color: #555; /* Um cinza mais claro para subtítulos, se necessário */
+}
+
+p {
+    color: #444; /* Um tom mais claro de cinza para parágrafos */
+}
+
+.text-secondary {
+    color: #999; /* Cor mais leve para informações como duração e progresso */
 }
 
 .navbar {

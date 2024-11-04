@@ -3,13 +3,51 @@
 {% block title %}Plataforma E-Learning{% endblock %}
 
 {% block content %}
-<h1>Bem-vindo à Plataforma de E-Learning</h1>
-<a href="{{ url_for('lista_cursos') }}" class="btn btn-primary">Ver Cursos</a>
-<br><br>
-{% if current_user.is_authenticated %}
-    <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
-{% else %}
-    <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
-    <a href="{{ url_for('registrar') }}" class="btn btn-secondary">Registrar-se</a>
-{% endif %}
+<div class="container text-center mt-5">
+    <h1 class="display-4">Bem-vindo à Plataforma de E-Learning</h1>
+    <a href="{{ url_for('lista_cursos') }}" class="btn btn-primary btn-lg mt-4">Ver Cursos</a>
+    <br><br>
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg mt-2">Logout</a>
+    {% else %}
+        <a href="{{ url_for('login') }}" class="btn btn-secondary btn-lg mt-2">Login</a>
+        <a href="{{ url_for('registrar') }}" class="btn btn-secondary btn-lg mt-2">Registrar-se</a>
+    {% endif %}
+</div>
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        font-size: 1.2em;
+        border-radius: 5px;
+        transition: transform 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2em;
+        }
+
+        .btn {
+            font-size: 1em;
+            padding: 10px 20px;
+        }
+    }
+</style>
 {% endblock %}
