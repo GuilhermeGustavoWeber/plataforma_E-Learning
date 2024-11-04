@@ -332,4 +332,4 @@ def avaliacao(curso_id, avaliacao_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Cria todas as tabelas do banco de dados
-    app.run(debug=True)
+    app.run(port=8085, host='0.0.0.0', debug=True, threaded=True)
